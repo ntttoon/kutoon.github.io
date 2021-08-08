@@ -51,8 +51,8 @@
                 <option value="1" selected>Trang chủ</option>
                 <option value="2" >Masthead 1016x100</option>
                 <option value="3" >Masthead 1016x250</option>
-                <option value="4" >Suckhoe 1110x100</option>
-                <option value="5" >Suckhoe 1110x250</option>
+                <option value="4" >Suckhoe 1112x100</option>
+                <option value="5" >Suckhoe 1112x250</option>
             </select>
         </p>
         <form action="#" id="download_form">
@@ -336,7 +336,7 @@
         if(this.value == 4){
             setUncheck();
             $("#check_sk100, #check_sk01_jpg, #check_sk02_jpg, #check_sk03_jpg").prop( "checked", true );
-            document.getElementById('pw').value = 1110;
+            document.getElementById('pw').value = 1112;
             var page_width = Number(document.getElementById('pw').value);
             var top1 = document.getElementById("top100");
             var top2 = document.getElementById("top250");
@@ -346,7 +346,7 @@
         if(this.value == 5){
             setUncheck();
             $("#check_sk250, #check_sk01_jpg, #check_sk02_jpg, #check_sk03_jpg").prop( "checked", true );
-            document.getElementById('pw').value = 1110;
+            document.getElementById('pw').value = 1112;
             var page_width = Number(document.getElementById('pw').value);
             var top1 = document.getElementById("top100");
             var top2 = document.getElementById("top250");

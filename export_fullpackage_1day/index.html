@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Export 1day pack</title>
+    <link rel="stylesheet" href="../css/w3.css">
+    <script async src="../js_libs/jszip.js"> </script>
+    <script async src="../js_libs/FileSaver.js"> </script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .hide{
+            display: none;
+        }
+        .floatleft{
+            float: left;
+            margin: 10px;
+        }
+        .divide_four{
+            width: 25%;
+        }
+        .divide_five{
+            width: 20%;
+        }
+        /* color */
+        .w3-ios-dark-blue{color:#fff;background-color:#5856d6}
+        .w3-ios-deep-blue{color:#fff;background-color:#007AFF}
+        .w3-ios-blue{color:#fff;background-color:#34AADC}
+        .w3-ios-light-blue{color:#fff;background-color:#5AC8FA}
+        .w3-ios-green{color:#000;background-color:#4cd964}
+        .w3-ios-pink{color:#fff;background-color:#ff2d55}
+        .w3-ios-red{color:#fff;background-color:#ff3b30}
+        .w3-ios-orange{color:#fff;background-color:#ff9500}
+        .w3-ios-yellow{color:#000;background-color:#ffcc00}
+        .w3-ios-grey{color:#fff;background-color:#8e8e93}
+        .w3-ios-light-grey{color:#000;background-color:#ceced2}
+        .w3-ios-background{color:#000;background-color:#efeff4}
+    </style>
+</head>
+<body class="w3-ios-background">
+    <div class="w3-bar" style="background: #78b43d;">
+        <button class="w3-bar-item w3-button tablink w3-ios-background" onclick="openCity(event,'tab01');showDiv('pcgroup');hideDiv('mbgroup')"><i class="fa fa-map-o"></i> Backgrounds </button>
+        <button class="w3-bar-item w3-button tablink" onclick="openCity(event,'tab02');showDiv('pcgroup');hideDiv('mbgroup')"><i class="fa fa-desktop"></i> Các banner pc</button>
+        <button class="w3-bar-item w3-button tablink" onclick="openCity(event,'tab03');showDiv('mbgroup');hideDiv('pcgroup')"><i class="fa fa-mobile"></i> Các banner mobile</button>
+        <button class="w3-button w3-red w3-bar-item w3-right" id="zip_btn">Pack it!</button>
+    </div>
+    <div class="w3-container w3-padding-16">
+        <div class="w3-container w3-ios-deep-blue" id="pcgroup">
+            <h3 class="w3-center">Gắn tracking cho PC</h3>
+            <p class="w3-center">Lưu ý phần gắn Tracking Impression và Click, các anh chị copy đúng và chính xác, không thừa các ký tự lạ như dấu nháy đơn ' hoặc dấu nháy kép ". Nhắc KD kiểm tra số liệu.</p>
+            <p>
+                <label><b>Dán impression tracking vào ô dưới (chỉ gắn ở bg trái)</b> - Tracking imp phải bắt đầu bằng <b>https://</b></label>
+                <input class="w3-input w3-border" type="text" id="tracking_imp" value="">
+                <label><b>click tracking/landing page</b> - Link bắt đầu bằng <b>http://</b> hoặc <b>https://</b></label>
+                <input class="w3-input w3-border" type="text" id="tracking_click" value="https://24h.com.vn">
+            </p>
+        </div>
+        <div class="w3-container w3-ios-green" id="mbgroup" style="display: none;">
+            <h3 class="w3-center">Gắn tracking cho MOBILE</h3>
+            <p class="w3-center">Lưu ý phần gắn Tracking Impression và Click, các anh chị copy đúng và chính xác, không thừa các ký tự lạ như dấu nháy đơn ' hoặc dấu nháy kép ". Nhắc KD kiểm tra số liệu.</p>
+            <p>
+                <label><b>Dán impression tracking vào ô dưới (chỉ gắn ở banner top)</b> - Tracking imp phải bắt đầu bằng <b>https://</b></label>
+                <input class="w3-input w3-border" type="text" id="tracking_imp_mb" value="">
+                <label><b>click tracking/landing page</b> - Link bắt đầu bằng <b>http://</b> hoặc <b>https://</b></label>
+                <input class="w3-input w3-border" type="text" id="tracking_click_mb" value="https://m.24h.com.vn">
+            </p>
+        </div>
+    </div>
+      
+    <div id="tab01" class="city">
+        <div class="w3-container">
+            <p>
+                <div>Chọn loại bg để xuất file</div>
+                <select id="demochoice">
+                    <option value="1" selected>Trang chủ (1904x1040)</option>
+                    <option value="2" >Trang trong top 100 (1904x1040)</option>
+                    <option value="3" >Trang trong top 250 (1904x1040)</option>
+                </select>
+            </p>
+            <p>
+                <div style="width: 300px; margin-right: 100px;">
+                    <span id="sliderOutput">Chất lượng ảnh bộ background: 100%</span>
+                    <input type="range" min="0.7" max="1" value="1" step="0.01" class="w3-input" id="qualitySlider">
+                </div>
+            </p>
+            <p>
+                <label>Page width</label>
+                <input class="w3-border bginput" type="text" id="pw" value="1016" disabled>
+                <label>Big bg width</label>
+                <input class="w3-border bginput" type="text" id="bw" value="444" disabled>
+                <label>Big bg height</label>
+                <input class="w3-border bginput" type="text" id="bh" value="1040" disabled>
+                <label>Small bg width</label>
+                <input class="w3-border bginput" type="text" id="sw" value="205" disabled>
+                <label>Small bg height</label>
+                <input class="w3-border bginput" type="text" id="sh" value="900" disabled>
+            </p>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <label>Chọn ảnh chứa bg kt lớn</label>
+                    <input type="file" id="imageLoader"/>
+                    <div>Ảnh chứa bg kt lớn</div>
+                    <canvas id="imageCanvas" style="height: 300px;"></canvas>
+                </div>
+                <div class="w3-half w3-container">
+                    <label>Chọn ảnh chứa bg kt nhỏ</label>
+                    <input type="file" id="imageLoader2"/>
+                    <div>Ảnh chứa bg kt nhỏ</div>
+                    <canvas id="imageCanvas2" style="height: 300px;"></canvas>
+                </div>
+            </div>
+
+            <br>
+            <canvas id="left_to" class="hide floatleft" width="444" height="1040"></canvas>
+            <canvas id="right_to" class="hide floatleft" width="444" height="1040"></canvas>
+            <canvas id="left_nho" class="hide floatleft" width="205" height="900"></canvas>
+            <canvas id="right_nho" class="hide floatleft" width="205" height="900"></canvas>
+            <canvas id="top100" class="hide floatleft" width="1016" height="100"></canvas>
+            <canvas id="top250" class="hide floatleft" width="1016" height="250"></canvas>
+            <div class="w3-row">
+                <div class="w3-col w3-container divide_four">
+                    <div>Bg trái 444x1040</div>
+                    <img id="left_to_jpg" class="w3-image">
+                </div>
+                <div class="w3-col w3-container divide_four">
+                    <div>Bg phải 444x1040</div>
+                    <img id="right_to_jpg" class="w3-image">
+                </div>
+                <div class="w3-col w3-container divide_four">
+                    <div>Bg trái 205x900</div>
+                    <img id="left_nho_jpg" class="w3-image">
+                </div>
+                <div class="w3-col w3-container divide_four">
+                    <div>Bg phải 205x900</div>
+                    <img id="right_nho_jpg" class="w3-image">
+                </div>
+            </div>
+            <br>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <div>Top 100</div>
+                    <img id="top100_jpg" class="w3-image">
+                </div>
+                <div class="w3-half w3-container">
+                    <div>Top 250</div>
+                    <img id="top250_jpg" class="w3-image">
+                </div>
+            </div>
+            <div class="hide" id="html_custom_holder"></div>
+            <div class="hide" id="html_custom_imp_holder"></div>
+            <div class="hide" id="html_leaderboard_holder"></div>
+            <div class="hide" id="html_320100m_imp_holder"></div>
+            <div class="hide" id="html_320160m_imp_holder"></div>
+            <div class="hide" id="html_320640m_holder"></div>
+            <div class="hide" id="html_300250m_holder"></div>
+            <div class="hide" id="html_320100m2_holder"></div>
+            <!-- holder img -->
+            <div class="hide" id="img_learderboard_holder"></div>
+            <div class="hide" id="img_300600_holder"></div>
+            <div class="hide" id="img_300250_holder"></div>
+            <div class="hide" id="img_336280_holder"></div>
+            <div class="hide" id="img_696120_holder"></div>
+            <div class="hide" id="img_320100m_holder"></div>
+            <div class="hide" id="img_320160m_holder"></div>
+            <div class="hide" id="img_320640m_holder"></div>
+            <div class="hide" id="img_300250m_holder"></div>
+            <div class="hide" id="img_320100m2_holder"></div>
+        </div>
+    </div>
+      
+    <div id="tab02" class="city" style="display:none">
+        <div class="w3-container" class="background:#282828">
+            <h3>Upload ảnh banner pc</h3>
+            <div>banner <strong>300x600</strong></div>
+            <input class="w3-input" id="b300600" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner <strong>300x250</strong></div>
+            <input class="w3-input" id="b300250" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner <strong>336x280</strong></div>
+            <input class="w3-input" id="b336280" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner <strong>696x120</strong></div>
+            <input class="w3-input" id="b696120" type="file" accept="image/x-png,image/gif,image/jpeg" />
+        </div>
+    </div>
+
+    <div id="tab03" class="city" style="display:none">
+        <div class="w3-container">
+            <h3>Upload ảnh banner mobile</h3>
+            <div>banner top <strong>320x100 (640x200)</strong> gắn impression</div>
+            <input class="w3-input" id="b320100m" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner top lớn <strong>320x160 (640x320)</strong> gắn impression</div>
+            <input class="w3-input" id="b320160m" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner inpage <strong>320x640 (600x1200)</strong></div>
+            <input class="w3-input" id="b320640m" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner center <strong>300x250 (600x500)</strong></div>
+            <input class="w3-input" id="b300250m" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            <div>banner TTSP/chân bv <strong>320x100 (640x200)</strong></div>
+            <input class="w3-input" id="b320100m2" type="file" accept="image/x-png,image/gif,image/jpeg" />
+        </div>
+    </div>
+    
+    <script>
+        function openCity(evt, cityName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("city");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" w3-ios-background", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " w3-ios-background";
+        }
+        function showDiv(divName) {
+            document.getElementById(divName).style.display = "block";
+        }
+        function hideDiv(divName) {
+            document.getElementById(divName).style.display = "none";
+        }
+    </script>   
+
+    <script>
+        var imageLoader = document.getElementById('imageLoader');
+        imageLoader.addEventListener('change', handleImage, false);
+        //////////
+        var imageLoader2 = document.getElementById('imageLoader2');
+        imageLoader2.addEventListener('change', handleImage2, false);
+        //////////
+        var canvas = document.getElementById('imageCanvas');
+        var canvas2 = document.getElementById('imageCanvas2');
+        //////////
+        var ctx = canvas.getContext('2d');
+        var ctx2 = canvas2.getContext('2d');
+        //////////
+        var left_to = document.getElementById('left_to');
+        var left_to_ctx = left_to.getContext('2d');
+        var left_nho = document.getElementById('left_nho');
+        var left_nho_ctx = left_nho.getContext('2d');
+        var right_to = document.getElementById('right_to');
+        var right_to_ctx = right_to.getContext('2d');
+        var right_nho = document.getElementById('right_nho');
+        var right_nho_ctx = right_nho.getContext('2d');
+        // var phai1 = document.getElementById('phai1');
+        // var phai1_ctx = phai1.getContext('2d');
+        var top100 = document.getElementById('top100');
+        var top100_ctx = top100.getContext('2d');
+        var top250 = document.getElementById('top250');
+        var top250_ctx = top250.getContext('2d');
+        //////////
+        var imgPerOut = document.getElementById('sliderOutput');
+        var imgSlider = document.getElementById('qualitySlider');
+        var imgQuality = 1;
+        imgSlider.oninput = function() {
+            var percentNumQuality = this.value*100 + "%"
+            imgPerOut.innerHTML = 'Chất lượng ảnh: '+ percentNumQuality;
+            imgQuality = Number(this.value);
+            document.getElementById("left_to_jpg").src = '';
+            document.getElementById("right_to_jpg").src = '';
+            document.getElementById("left_to_jpg").src = left_to.toDataURL("image/jpeg",imgQuality);
+            document.getElementById("right_to_jpg").src = right_to.toDataURL("image/jpeg",imgQuality);
+            document.getElementById("top100_jpg").src = top100.toDataURL("image/jpeg",imgQuality);
+            document.getElementById("top250_jpg").src = top250.toDataURL("image/jpeg",imgQuality);
+            document.getElementById("left_nho_jpg").src = left_nho.toDataURL("image/jpeg",imgQuality);
+            document.getElementById("right_nho_jpg").src = right_nho.toDataURL("image/jpeg",imgQuality);
+        }
+        //////////////////////////////
+        function handleImage(e){
+            var page_width = Number(document.getElementById('pw').value);
+            var bg_big_width = Number(document.getElementById('bw').value);
+            var bg_big_height = Number(document.getElementById('bh').value);
+            var bg_small_width = Number(document.getElementById('sw').value);
+            var bg_small_height = Number(document.getElementById('sh').value);
+            var reader = new FileReader();
+            reader.onload = function(event){
+                var img = new Image();
+                img.onload = function(){
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img,0,0);
+                    left_to_ctx.drawImage(img,0,0,bg_big_width,bg_big_height,0,0,bg_big_width,bg_big_height);
+                    right_to_ctx.drawImage(img,page_width+bg_big_width,0,bg_big_width,bg_big_height,0,0,bg_big_width,bg_big_height);
+                    top100_ctx.drawImage(img,bg_big_width,0,page_width,100,0,0,page_width,100);
+                    top250_ctx.drawImage(img,bg_big_width,0,page_width,250,0,0,page_width,250);
+                    document.getElementById("left_to_jpg").src = left_to.toDataURL("image/jpeg",imgQuality);
+                    document.getElementById("right_to_jpg").src = right_to.toDataURL("image/jpeg",imgQuality);
+                    document.getElementById("top100_jpg").src = top100.toDataURL("image/jpeg",imgQuality);
+                    document.getElementById("top250_jpg").src = top250.toDataURL("image/jpeg",imgQuality);
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);     
+        }
+        //////////////////////////////
+        function handleImage2(e){
+            var page_width = Number(document.getElementById('pw').value);
+            var bg_big_width = Number(document.getElementById('bw').value);
+            var bg_big_height = Number(document.getElementById('bh').value);
+            var bg_small_width = Number(document.getElementById('sw').value);
+            var bg_small_height = Number(document.getElementById('sh').value);
+            var reader = new FileReader();
+            reader.onload = function(event){
+                var img = new Image();
+                img.onload = function(){
+                    canvas2.width = img.width;
+                    canvas2.height = img.height;
+                    ctx2.drawImage(img,0,0);
+                    left_nho_ctx.drawImage(img,bg_big_width-bg_small_width,0,bg_small_width,bg_small_height,0,0,bg_small_width,bg_small_height);
+                    right_nho_ctx.drawImage(img,page_width+bg_big_width,0,bg_small_width,bg_small_height,0,0,bg_small_width,bg_small_height);
+                    document.getElementById("left_nho_jpg").src = left_nho.toDataURL("image/jpeg",imgQuality);
+                    document.getElementById("right_nho_jpg").src = right_nho.toDataURL("image/jpeg",imgQuality);
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);     
+        }
+        //////////////////////////////
+        // $( "#pw" ).change(function() {
+        //     var top1 = document.getElementById("top100");
+        //     var top2 = document.getElementById("top250");
+        //     top1.width = this.value;
+        //     top2.width = this.value;
+        // });
+        $( "#demochoice" ).change(function() {
+            if(this.value == 2){
+                document.getElementById('pw').value = 1016;
+                var page_width = Number(document.getElementById('pw').value);
+                var top1 = document.getElementById("top100");
+                var top2 = document.getElementById("top250");
+                top1.width = page_width;
+                top2.width = page_width;
+            }
+            if(this.value == 3){
+                document.getElementById('pw').value = 1016;
+                var page_width = Number(document.getElementById('pw').value);
+                var top1 = document.getElementById("top100");
+                var top2 = document.getElementById("top250");
+                top1.width = page_width;
+                top2.width = page_width;
+            }
+        });
+        //////////////////////////////
+        function readTemplates(path,div_holder){
+            var txtFile = new XMLHttpRequest();
+                txtFile.open("GET", path, true);
+                txtFile.onreadystatechange = function() {
+                    if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+                        if (txtFile.status === 200) {  // Makes sure it's found the file.
+                            allText = txtFile.responseText;
+                            //console.log(allText);
+                            //lines = txtFile.responseText.split("\n"); // Will separate each line into an array
+                            document.getElementById(div_holder).textContent = allText;
+                        }
+                    }
+                }
+            txtFile.send(null);
+        }
+        readTemplates("templates/tinh.html","html_custom_holder");
+        readTemplates("templates/tinh.html","html_custom_imp_holder");
+        readTemplates("templates/leaderboard.html","html_leaderboard_holder");
+        readTemplates("templates/320x100.html","html_320100m_imp_holder");
+        readTemplates("templates/320x160.html","html_320160m_imp_holder");
+        readTemplates("templates/inpage.html","html_320640m_holder");
+        readTemplates("templates/300x250.html","html_300250m_holder");
+        readTemplates("templates/320x100.html","html_320100m2_holder");
+        ///////////////////////// Load input file into div holder
+        function readInputFile(input,div_holder,mode) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function (e) {
+                    document.getElementById(div_holder).textContent = e.target.result;
+                }
+                if(mode == "image" ){
+                    reader.readAsDataURL(input.files[0]);
+                }
+                if(mode == "text" ){
+                    reader.readAsText(input.files[0]);
+                }
+            }
+        }
+        document.getElementById("b300600").addEventListener("change", function(){
+            readInputFile(this,"img_300600_holder","image");
+        })
+        document.getElementById("b300250").addEventListener("change", function(){
+            readInputFile(this,"img_300250_holder","image");
+        })
+        document.getElementById("b336280").addEventListener("change", function(){
+            readInputFile(this,"img_336280_holder","image");
+        })
+        document.getElementById("b696120").addEventListener("change", function(){
+            readInputFile(this,"img_696120_holder","image");
+        })
+        document.getElementById("b320100m").addEventListener("change", function(){
+            readInputFile(this,"img_320100m_holder","image");
+        })
+        document.getElementById("b320160m").addEventListener("change", function(){
+            readInputFile(this,"img_320160m_holder","image");
+        })
+        document.getElementById("b320640m").addEventListener("change", function(){
+            readInputFile(this,"img_320640m_holder","image");
+        })
+        document.getElementById("b300250m").addEventListener("change", function(){
+            readInputFile(this,"img_300250m_holder","image");
+        })
+        document.getElementById("b320100m2").addEventListener("change", function(){
+            readInputFile(this,"img_320100m2_holder","image");
+        })
+        //////////////////////////////
+        function replaceClick(div,string) {
+            var str = document.getElementById(div).textContent; 
+            var res = str.replace("{{this_is_click}}", string);
+            document.getElementById(div).textContent = res 
+        }
+        function replaceImp(div,string) {
+            var str = document.getElementById(div).textContent; 
+            var res = str.replace("{{this_is_impression}}", string);
+            document.getElementById(div).textContent = res
+        }
+        function replaceWidthHeight(div,stringw,stringh) {
+            var str = document.getElementById(div).textContent; 
+            var res = str.replace("{{this_is_mwidth}}", stringw);
+            res = res.replace("{{this_is_mheight}}", stringh);
+            document.getElementById(div).textContent = res
+        }
+        //////////////////////////////
+        document.getElementById("zip_btn").addEventListener("click", function(){
+            
+            readTemplates("templates/tinh.html","html_custom_holder");
+            readTemplates("templates/tinh.html","html_custom_imp_holder");
+            readTemplates("templates/leaderboard.html","html_leaderboard_holder");
+            readTemplates("templates/320x100.html","html_320100m_imp_holder");
+            readTemplates("templates/320x160.html","html_320160m_imp_holder");
+            readTemplates("templates/inpage.html","html_320640m_holder");
+            readTemplates("templates/300x250.html","html_300250m_holder");
+            readTemplates("templates/320x100.html","html_320100m2_holder");
+            //
+            var zip = new JSZip();
+            var type_pack = document.getElementById("demochoice").value;
+            ///////// PC
+            //replace click and imp pc
+            var imp_pc = document.getElementById("tracking_imp").value;
+            imp_pc = change_alias(imp_pc);
+            var no_imp_string_pc = '//var IMPRESSION_URL = "impression";';
+            var imp_string_pc = no_imp_string_pc;
+            var check_imp_pc = imp_pc.startsWith("https://");
+            if(imp_pc !== ""){
+                if(check_imp_pc == false){
+                    alert("Link tracking impression pc có thể đang bị sai, hãy kiểm tra lại!")
+                    return;
+                }
+                imp_string_pc = 'var IMPRESSION_URL = "' + imp_pc + '";';
+            }
+            var click_pc = document.getElementById("tracking_click").value;
+            click_pc = change_alias(click_pc);
+            var check_click_pc = click_pc.startsWith("http");
+            if(check_click_pc == false){
+                alert("Link tracking click pc có thể đang bị sai, hãy kiểm tra lại!")
+                return;
+            }
+            alert("+ Tracking impression pc là: " + imp_pc + "\n+ Tracking click pc là: " + click_pc);
+            //Custom html
+            replaceImp("html_custom_holder",no_imp_string_pc);
+            replaceClick("html_custom_holder",click_pc);
+            //Custom imp html
+            replaceImp("html_custom_imp_holder",imp_string_pc);
+            replaceClick("html_custom_imp_holder",click_pc);
+            //leaderboard html
+            replaceImp("html_leaderboard_holder",no_imp_string_pc);
+            replaceClick("html_leaderboard_holder",click_pc);
+
+            ///////// MOBILE
+            //replace click and imp mb
+            var imp_mb = document.getElementById("tracking_imp_mb").value;
+            imp_mb = change_alias(imp_mb);
+            var no_imp_string_mb = '//var IMPRESSION_URL = "impression";';
+            var imp_string_mb = no_imp_string_mb;
+            var check_imp_mb = imp_mb.startsWith("https://");
+            if(imp_mb !== ""){
+                if(check_imp_mb == false){
+                    alert("Link tracking impression mb có thể đang bị sai, hãy kiểm tra lại!")
+                    return;
+                }
+                imp_string_mb = 'var IMPRESSION_URL = "' + imp_mb + '";';
+            }
+            var click_mb = document.getElementById("tracking_click_mb").value;
+            click_mb = change_alias(click_mb);
+            var check_click_mb = click_mb.startsWith("http");
+            if(check_click_mb == false){
+                alert("Link tracking click mb có thể đang bị sai, hãy kiểm tra lại!")
+                return;
+            }
+            alert("+ Tracking impression mb là: " + imp_mb + "\n+ Tracking click mb là: " + click_mb);
+            //top 320x120 imp
+            replaceImp("html_320100m_imp_holder",imp_string_mb);
+            replaceClick("html_320100m_imp_holder",click_mb);
+            //top 320x160 imp
+            replaceImp("html_320160m_imp_holder",imp_string_mb);
+            replaceClick("html_320160m_imp_holder",click_mb);
+            //inpage 320x640
+            replaceImp("html_320640m_holder",no_imp_string_mb);
+            replaceClick("html_320640m_holder",click_mb);
+            //inpage 300x250
+            replaceImp("html_300250m_holder",no_imp_string_mb);
+            replaceClick("html_300250m_holder",click_mb);
+            //ttsp cbv 320x100
+            replaceImp("html_320100m2_holder",no_imp_string_mb);
+            replaceClick("html_320100m2_holder",click_mb);
+
+
+            //html no imp
+            var data_html_custom = document.getElementById("html_custom_holder").textContent;
+            //html with imp
+            var data_html_custom_imp = document.getElementById("html_custom_imp_holder").textContent;
+            //html 320x100 imp
+            var data_html_320100m_imp = document.getElementById("html_320100m_imp_holder").textContent;
+            //html 320x160 imp
+            var data_html_320160m_imp = document.getElementById("html_320160m_imp_holder").textContent;
+            //html 320x640
+            var data_html_320640m = document.getElementById("html_320640m_holder").textContent;            
+            //html 300x250
+            var data_html_300250m = document.getElementById("html_300250m_holder").textContent;
+            //html 320x100 cbv
+            var data_html_320100m2 = document.getElementById("html_320100m2_holder").textContent;
+
+            //Image bgs
+            var data_left_to = document.getElementById("left_to_jpg").src;
+            var data_left_nho = document.getElementById("left_nho_jpg").src;
+            var data_right_to = document.getElementById("right_to_jpg").src;
+            var data_right_nho = document.getElementById("right_nho_jpg").src;
+            var data_top100 = document.getElementById("top100_jpg").src;
+            var data_top250 = document.getElementById("top250_jpg").src;
+
+            //Image pc
+            var data_300600 = document.getElementById("img_300600_holder").textContent;
+            var data_300250 = document.getElementById("img_300250_holder").textContent;
+            var data_336280 = document.getElementById("img_336280_holder").textContent;
+            var data_696120 = document.getElementById("img_696120_holder").textContent;
+
+            //Image mobile
+            var data_320100m = document.getElementById("img_320100m_holder").textContent;
+            var data_320160m = document.getElementById("img_320160m_holder").textContent;
+            var data_320640m = document.getElementById("img_320640m_holder").textContent;
+            var data_300250m = document.getElementById("img_300250m_holder").textContent;
+            var data_320100m2 = document.getElementById("img_320100m2_holder").textContent;
+
+            if( document.getElementById("imageLoader").files.length !== 0 ){
+                zip.file("pc/bg_left/bg_left.html", data_html_custom_imp);
+                zip.file("pc/bg_left/left_to.jpg", data_left_to.substr(data_left_to.indexOf(',')+1), {base64: true});
+                zip.file("pc/bg_right/bg_right.html", data_html_custom);
+                zip.file("pc/bg_right/right_to.jpg", data_right_to.substr(data_right_to.indexOf(',')+1), {base64: true});
+                if( document.getElementById("imageLoader2").files.length !== 0 ){
+                    zip.file("pc/bg_left/left_nho.jpg", data_left_nho.substr(data_left_nho.indexOf(',')+1), {base64: true});
+                    zip.file("pc/bg_right/right_nho.jpg", data_right_nho.substr(data_right_nho.indexOf(',')+1), {base64: true});
+                }
+                alert("+ bg trái to: " + Math.round(((data_left_to.length * 0.75)/1000)) + "\n+ bg trái nhỏ: " + Math.round(((data_left_nho.length * 0.75)/1000)) + "\n+ bg phải to: " + Math.round(((data_right_to.length * 0.75)/1000)) + "\n+ bg phải nhỏ: " + Math.round(((data_right_nho.length * 0.75)/1000)));
+                if(type_pack == 2){
+                    var data_top100 = document.getElementById("top100_jpg").src;
+                    var page_width = Number(document.getElementById('pw').value);
+                    replaceWidthHeight("html_leaderboard_holder",page_width,100)
+                    var data_html_leaderboard = document.getElementById("html_leaderboard_holder").textContent;
+                    zip.file("pc/leaderboard_100/leaderboard_100.html", data_html_leaderboard);
+                    zip.file("pc/leaderboard_100/leaderboard_100.jpg", data_top100.substr(data_top100.indexOf(',')+1), {base64: true});
+                }
+                if(type_pack == 3){
+                    var data_top250 = document.getElementById("top250_jpg").src;
+                    var page_width = Number(document.getElementById('pw').value);
+                    replaceWidthHeight("html_leaderboard_holder",page_width,250)
+                    var data_html_leaderboard = document.getElementById("html_leaderboard_holder").textContent;
+                    zip.file("pc/leaderboard_250/leaderboard_250.html", data_html_leaderboard);
+                    zip.file("pc/leaderboard_250/leaderboard_250.jpg", data_top250.substr(data_top250.indexOf(',')+1), {base64: true});
+                }
+            }
+            /////// PC
+            if(data_300600!==""){
+                zip.file("pc/300x600/300x600.html", data_html_custom);
+                zip.file("pc/300x600/300x600.jpg", data_300600.substr(data_300600.indexOf(',')+1), {base64: true});
+            }
+            if(data_300250!==""){
+                zip.file("pc/300x250/300x250.html", data_html_custom);
+                zip.file("pc/300x250/300x250.jpg", data_300250.substr(data_300250.indexOf(',')+1), {base64: true});
+            }
+            if(data_336280!==""){
+                zip.file("pc/336x280/336x280.html", data_html_custom);
+                zip.file("pc/336x280/336x280.jpg", data_336280.substr(data_336280.indexOf(',')+1), {base64: true});
+            }
+            if(data_696120!==""){
+                zip.file("pc/696x120/696x120.html", data_html_custom);
+                zip.file("pc/696x120/696x120.jpg", data_696120.substr(data_696120.indexOf(',')+1), {base64: true});
+            }
+            /////// MOBILE
+            if(data_320100m!==""){
+                zip.file("mb/320x100/320x100.html", data_html_320100m_imp);
+                zip.file("mb/320x100/320x100.jpg", data_320100m.substr(data_320100m.indexOf(',')+1), {base64: true});
+            }
+            if(data_320160m!==""){
+                zip.file("mb/320x160/320x160.html", data_html_320160m_imp);
+                zip.file("mb/320x160/320x160.jpg", data_320160m.substr(data_320160m.indexOf(',')+1), {base64: true});
+            }
+            if(data_320640m!==""){
+                zip.file("mb/inpage/inpage.html", data_html_320640m);
+                zip.file("mb/inpage/inpage.jpg", data_320640m.substr(data_320640m.indexOf(',')+1), {base64: true});
+            }
+            if(data_300250m!==""){
+                zip.file("mb/300x250/300x250.html", data_html_300250m);
+                zip.file("mb/300x250/300x250.jpg", data_300250m.substr(data_300250m.indexOf(',')+1), {base64: true});
+            }
+            if(data_320100m2!==""){
+                zip.file("mb/cbv/cbv.html", data_html_320100m2);
+                zip.file("mb/cbv/320x100.jpg", data_320100m2.substr(data_320100m2.indexOf(',')+1), {base64: true});
+            }
+
+            var filename = prompt("Đặt tên cho file zip.\nLưu ý: Không nên đặt tên Tiếng Việt có dấu, ký tự lạ, không cần thêm .zip", "banner");
+            if (filename != null) {
+                zip.generateAsync({type:"blob"})
+                .then(function(content) {
+                    saveAs(content, filename + ".zip");
+                });
+            }
+
+            })
+    </script>
+    <script>
+        function change_alias(alias) {
+            var str = alias;
+            str = str.replace(/\'|\"|`/g,"");
+            return str;
+        }
+    </script>
+</body>
+</html>

@@ -3,22 +3,47 @@
     <head> 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>in-page mobile responsive</title>
+        <title>in-page mobile</title>
+        <script type="text/javascript">
+            {{this_is_impression}}
+            var V_URL= '{{this_is_click}}';
+            V_URL   = '%%CLICK_URL_UNESC%%'+V_URL;
+    
+            var ADS_FROM = 'eva';
+            var DEVICE = 'MB';
+        </script>
+
+        <!-- GA4 Lib -->
+        <script async src='https://www.googletagmanager.com/gtag/js?id=G-24EL5B93N8'></script>
         <script>
-            /*=========== [THÔNG TIN CÓ THỂ THANH ĐỔI] KHAI BÁO CÁC BIẾN TÊN/THÔNG SỐ GHI NHẬN TRACKING BẰNG GA */
-            // Url dích
-            var V_URL= '%%this_is_click%%';
-            
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        // gtag('config', 'G-24EL5B93N8', {'send_page_view': false,  'transport_type': 'beacon'});
+        // gtag('config', 'G-0MRSCM1XC6', {'send_page_view': false,  'transport_type': 'beacon'});
+        </script>
+        <!-- GA4 Lib -->
+
+        <!-- Tracking Lib -->
+        <script src="https://cdn.24h.com.vn/upload/creativeGa4Tracking_html5.js" id="creativeGa4Tracking_html5" 
+        data-EVENT_TYPE="EVENT_TYPE"
+        data-EVENT_IMPRESSION="impression"
+        data-EVENT_ADS_CLICK="ads_click"
+        data-LINE_ITEM_ID="%eaid!"
+        data-ADVERTISER_ID="%eadv!"
+        data-ORDER_ID="%ebuy!"
+        data-CREATIVE_ID="%ecid!"
+        data-ADUNIT_ID="%epid!"
+        data-ga4_ids='["G-24EL5B93N8", "G-0MRSCM1XC6"]'></script>
+        <!-- Tracking Lib -->
+
+        <script type="text/javascript">
+            /*=========== Khai báo các biến TÊN/THÔNG SỐ ghi nhận tracking bằng GA */
             // Cấu hình chiều rộng banner
             var V_WIDTH = 320;
             // Cấu hình chiều cao banner
             var V_HEIGHT = 640;
-            /*=========== [HẾT PHẦN THÔNG TIN CÓ THỂ THANH ĐỔI] KHAI BÁO CÁC BIẾN TÊN/THÔNG SỐ GHI NHẬN TRACKING BẰNG GA */
-        </script>
-        <script type="text/javascript">
-            /*=========== Khai báo các biến TÊN/THÔNG SỐ ghi nhận tracking bằng GA */
-            // Gắn click tracking
-            V_URL   = '%%CLICK_URL_UNESC%%'+V_URL;
             
             // Khai báo các biến sử dụng để xử lý hiển thị banner html5
             var id_div_parent = '%%PATTERN:id_div%%';
@@ -89,34 +114,27 @@
                     tinh_width_height_banner_theo_ty_le(V_DEVICE_WIDTH, V_DEVICE_HEIGHT, V_WIDTH, V_HEIGHT);
                 }
             }
-            
-            function init(){ 
-            	var impDiv = document.getElementById('impressionTrack');
-				if(impDiv){
-                    // Gắn impression ở đây
-					impDiv.innerHTML = '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" border="0" width="0" height="0" style="display:none;" />';
-				}
-            }
+
             // Lấy width, hegiht của thiết bị
             sendBack24h('lay-width-height', '', '');
         </script>
         <style>.content{width: 100%; height: auto;text-align: center;}</style>
     </head>
-    <body onload="init();">
+    <body style="margin: 0" onload="impressionTrack();">
         <div class="content">
             <img id="banner-inpage" 
                 border="0" alt=""
                 src="%%FILE:JPG1%%" style="width: 100%" />
         </div>
+
         <div id="impressionTrack"></div>
-        
         <script type="text/javascript" language="javascript">
             // Lấy element by id
             var banner = document.getElementById("banner-inpage");
             // Sự kiện click vào banner
             banner.addEventListener("click", function(){
                 // Mở link mới
-                window.open(V_URL,"_blank");
+                clickTrack(V_URL);
             });
             
             if (window.addEventListener){
