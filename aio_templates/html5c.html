@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/w3.css">
+    <script async src="../js_libs/jszip.js"> </script>
+    <script async src="../js_libs/FileSaver.js"> </script> 
+    <script src="js/lib.js"> </script> 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        html,body,h1,h2,h3,h4,h5 {font-family: "Roboto", sans-serif}
+    </style>
+    <title>HTML5 Custom Static Image</title>
+</head>
+<body>
+    <!-- div holder -->
+    <div style="display: none" id="h5cus_html_holder"></div>
+    <div style="display: none" id="h5cus_img_holder"></div>
+
+    <!-- Header -->
+    <header style="padding-top:22px">
+        <h5><b>HTML5 Custom MB Static Image</b></h5>
+    </header>
+    <p>Impression</p>
+    <input class="w3-input w3-border" id="h5cus_imp" type="text" value="">
+    <p>V_URL</p>
+    <input class="w3-input w3-border" id="h5cus_click" type="text" value="https://www.google.com/">
+    <p>
+        <div>Chose template!</div>
+        <select id="demochoice" class="w3-input w3-border">
+            <option value="1" selected>HTML5 PC Custom Static</option>
+            <option value="2" >HTML5 PC Masthead Static</option>
+            <option value="3" >HTML5 MB Responsive Top 320x100</option>
+            <option value="4" >HTML5 MB Responsive Top 320x160</option>
+            <option value="5" >HTML5 MB Responsive Center 300x250</option>
+            <option value="6" >HTML5 MB Responsive Inpage 320x640</option>
+        </select>
+    </p>
+    <div class="w3-row">
+        <div class="w3-half">
+            <label>Masthead width</label>
+            <input class="w3-input w3-border" id="mwidth" type="text" value="1016">
+        </div>
+        <div class="w3-half">
+            <label>Masthead height</label>
+            <input class="w3-input w3-border" id="mheight" type="text" value="100">
+        </div>
+    </div>
+    <hr style="border: none;border-top: 1px solid #cecece;">
+    <div class="w3-container">
+        <div class="w3-card">
+            <input class="w3-input" id="h5cus_name" type="text" value="ad name">
+            <div class="w3-container">
+                <input class="w3-check" id="h5cus_impcheck" type="checkbox">
+                <label>use impression</label>
+                <p>Upload image</p>
+                <input class="w3-input" id="h5cus_img_upload" type="file" accept="image/x-png,image/gif,image/jpeg" />
+            </div>
+        </div>
+    </div>
+    <hr style="border: none;border-top: 1px solid #cecece;">
+    <p>Export</p>
+    <a class="w3-button w3-teal" href="#" id="h5cus_download">Download<i class="w3-margin-left fa fa-download"></i></a>
+
+    <script>
+        
+        readTemplates("templates/tinh.html","h5cus_html_holder");
+        
+        document.getElementById("h5cus_img_upload").addEventListener("change", function(){
+            readInputFile(this,"h5cus_img_holder","image");
+        })
+
+        $( "#demochoice" ).change(function() {
+            if(this.value == 1){
+                readTemplates("templates/tinh.html","h5cus_html_holder");
+            }
+            if(this.value == 2){
+                readTemplates("templates/leaderboard.html","h5cus_html_holder");
+            }
+            if(this.value == 3){
+                readTemplates("templates/320x100.html","h5cus_html_holder");
+            }
+            if(this.value == 4){
+                readTemplates("templates/320x160.html","h5cus_html_holder");
+            }
+            if(this.value == 5){
+                readTemplates("templates/300x250.html","h5cus_html_holder");
+            }
+            if(this.value == 6){
+                readTemplates("templates/inpage.html","h5cus_html_holder");
+            }
+        });
+        
+        document.getElementById("h5cus_download").addEventListener("click", function(){
+            
+            var zip = new JSZip();
+            var h5cus_i = document.getElementById("h5cus_imp").value;
+            var h5cus_c= document.getElementById("h5cus_click").value;
+            var mw = document.getElementById("mwidth").value;
+            var mh = document.getElementById("mheight").value;
+            var h5cus_html = document.getElementById("h5cus_html_holder").textContent;
+            var h5cus_img = document.getElementById("h5cus_img_holder").textContent;
+            var h5cus_name = document.getElementById("h5cus_name").value;
+            var h5cus_icheck = document.getElementById("h5cus_impcheck").checked;
+
+            h5cus_html = replaceString(h5cus_html,"{{this_is_click}}",h5cus_c);
+            h5cus_html = replaceString(h5cus_html,"{{this_is_mwidth}}",mw);
+            h5cus_html = replaceString(h5cus_html,"{{this_is_mheight}}",mh);
+
+            if(h5cus_icheck == false){
+                h5cus_html = replaceString(h5cus_html,'{{this_is_impression}}','//var IMPRESSION_URL = "impression";');
+            }
+
+            if(h5cus_icheck == true){
+                var h5cus_itxt = "var IMPRESSION_URL = " + '"'+ h5cus_i +'";';
+                h5cus_html = replaceString(h5cus_html,"{{this_is_impression}}",h5cus_itxt);
+            }
+
+            if(document.getElementById("h5cus_img_upload").files.length !== 0 ){
+                zip.file(h5cus_name + "/" + h5cus_name + ".html", h5cus_html);
+                zip.file(h5cus_name + "/" + h5cus_name + ".jpg", h5cus_img.substr(h5cus_img.indexOf(',')+1), {base64: true});
+            }
+
+            var filename = prompt("Name the zip file?", "banner");
+            if (filename != null) {
+                zip.generateAsync({type:"blob"})
+                .then(function(content) {
+                    saveAs(content, filename + ".zip");
+                });
+            }
+        })
+    </script>
+</body>
+</html>
