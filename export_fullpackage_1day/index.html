@@ -74,9 +74,11 @@
             <p>
                 <div>Chọn loại bg để xuất file</div>
                 <select id="demochoice">
-                    <option value="1" selected>BG Only</option>
+                    <option value="1" selected>BG Only (1904x1040)</option>
                     <option value="2" >Masthead 1016x100 (1904x1040)</option>
                     <option value="3" >Masthead 1016x250 (1904x1040)</option>
+                    <option value="4" >Masthead 1100x100 (1988x1040)</option>
+                    <option value="5" >Masthead 1100x250 (1988x1040)</option>
                 </select>
             </p>
             <p>
@@ -129,11 +131,11 @@
                     <img id="right_to_jpg" class="w3-image">
                 </div>
                 <div class="w3-col w3-container divide_four">
-                    <div>Bg trái 205x900</div>
+                    <div>Bg trái 205x900/170x900</div>
                     <img id="left_nho_jpg" class="w3-image">
                 </div>
                 <div class="w3-col w3-container divide_four">
-                    <div>Bg phải 205x900</div>
+                    <div>Bg phải 205x900/170x900</div>
                     <img id="right_nho_jpg" class="w3-image">
                 </div>
             </div>
@@ -326,19 +328,59 @@
         $( "#demochoice" ).change(function() {
             if(this.value == 2){
                 document.getElementById('pw').value = 1016;
+                document.getElementById('sw').value = 205;
                 var page_width = Number(document.getElementById('pw').value);
+                var small_width = Number(document.getElementById('sw').value);
                 var top1 = document.getElementById("top100");
                 var top2 = document.getElementById("top250");
+                var lnho = document.getElementById("left_nho");
+                var rnho = document.getElementById("right_nho");
                 top1.width = page_width;
                 top2.width = page_width;
+                lnho.width = small_width;
+                rnho.width = small_width;
             }
             if(this.value == 3){
                 document.getElementById('pw').value = 1016;
+                document.getElementById('sw').value = 205;
                 var page_width = Number(document.getElementById('pw').value);
+                var small_width = Number(document.getElementById('sw').value);
                 var top1 = document.getElementById("top100");
                 var top2 = document.getElementById("top250");
+                var lnho = document.getElementById("left_nho");
+                var rnho = document.getElementById("right_nho");
                 top1.width = page_width;
                 top2.width = page_width;
+                lnho.width = small_width;
+                rnho.width = small_width;
+            }
+            if(this.value == 4){
+                document.getElementById('pw').value = 1100;
+                document.getElementById('sw').value = 170;
+                var page_width = Number(document.getElementById('pw').value);
+                var small_width = Number(document.getElementById('sw').value);
+                var top1 = document.getElementById("top100");
+                var top2 = document.getElementById("top250");
+                var lnho = document.getElementById("left_nho");
+                var rnho = document.getElementById("right_nho");
+                top1.width = page_width;
+                top2.width = page_width;
+                lnho.width = small_width;
+                rnho.width = small_width;
+            }
+            if(this.value == 5){
+                document.getElementById('pw').value = 1100;
+                document.getElementById('sw').value = 170;
+                var page_width = Number(document.getElementById('pw').value);
+                var small_width = Number(document.getElementById('sw').value);
+                var top1 = document.getElementById("top100");
+                var top2 = document.getElementById("top250");
+                var lnho = document.getElementById("left_nho");
+                var rnho = document.getElementById("right_nho");
+                top1.width = page_width;
+                top2.width = page_width;
+                lnho.width = small_width;
+                rnho.width = small_width;
             }
         });
         //////////////////////////////
@@ -556,7 +598,7 @@
                     zip.file("pc/bg_right/right_nho.jpg", data_right_nho.substr(data_right_nho.indexOf(',')+1), {base64: true});
                 }
                 alert("+ bg trái to: " + Math.round(((data_left_to.length * 0.75)/1000)) + "\n+ bg trái nhỏ: " + Math.round(((data_left_nho.length * 0.75)/1000)) + "\n+ bg phải to: " + Math.round(((data_right_to.length * 0.75)/1000)) + "\n+ bg phải nhỏ: " + Math.round(((data_right_nho.length * 0.75)/1000)));
-                if(type_pack == 2){
+                if(type_pack == 2 || type_pack == 4){
                     var data_top100 = document.getElementById("top100_jpg").src;
                     var page_width = Number(document.getElementById('pw').value);
                     replaceWidthHeight("html_leaderboard_holder",page_width,100)
@@ -564,7 +606,7 @@
                     zip.file("pc/leaderboard_100/leaderboard_100.html", data_html_leaderboard);
                     zip.file("pc/leaderboard_100/leaderboard_100.jpg", data_top100.substr(data_top100.indexOf(',')+1), {base64: true});
                 }
-                if(type_pack == 3){
+                if(type_pack == 3 || type_pack == 5){
                     var data_top250 = document.getElementById("top250_jpg").src;
                     var page_width = Number(document.getElementById('pw').value);
                     replaceWidthHeight("html_leaderboard_holder",page_width,250)
