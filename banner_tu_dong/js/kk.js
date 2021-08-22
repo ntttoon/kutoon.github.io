@@ -12,8 +12,8 @@ function resizeCanvas(){
 	var w = document.getElementById("w").value;
 	var h = document.getElementById("h").value;
 	stage.width(w);
-  stage.height(h);
-  stage.draw();
+	stage.height(h);
+	stage.draw();
 }
 
 /* globalCompositeOperation :
@@ -85,35 +85,7 @@ imageObj3.onload = function() {
 };
 imageObj3.src = 'images/blank.png';
 
-//Stage check transform images
-stage.on('click tap', function (e) {
-	// if click on empty area - remove all transformers
-	if (e.target === stage) {
-	  stage.find('Transformer').destroy();
-	  layer.draw();
-	  return;
-	}
-	// do nothing if clicked NOT on our rectangles
-	if (!e.target.hasName('img')) {
-	  return;
-	}
-	// remove old transformers
-	// TODO: we can skip it if current rect is already selected
-	stage.find('Transformer').destroy();
-
-	// create new transformer
-	var tr = new Konva.Transformer({
-		centeredScaling: true,
-		//keepRatio: true,
-      	//enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
-	});
-	layer.add(tr);
-	tr.attachTo(e.target);
-	layer.draw();
-})
-
 // create text layer 1
-
 var textNode = new Konva.Text({
 	text: 'Lorem ipsum',
 	x: 20,
@@ -128,16 +100,8 @@ var textNode = new Konva.Text({
 });
 layer.add(textNode);
 
-textNode.on('dblclick', () => {
-	//var tw = document.getElementById('txt_width').value;
-	var ts = document.getElementById('txt_size').value;
-	var ta = document.getElementById('txt_align').value;
-	var tf = document.getElementById('txt_fonts').value;
-	var tb = document.getElementById('txt_bold').value;
-	var tl = document.getElementById('txt_lineheight').value;
-	var tc = '#' + document.getElementById('txt_color').value;
+textNode.on('dblclick', () => {	
 	// create textarea over canvas with absolute position
-
 	// first we need to find its positon
 	var textPosition = textNode.getAbsolutePosition();
 	var stageBox = stage.getContainer().getBoundingClientRect();
@@ -147,7 +111,6 @@ textNode.on('dblclick', () => {
 		y: textPosition.y + stageBox.top
 	};
 
-
 	// create textarea and style it
 	var textarea = document.createElement('textarea');
 	document.body.appendChild(textarea);
@@ -156,57 +119,52 @@ textNode.on('dblclick', () => {
 	textarea.style.position = 'absolute';
 	textarea.style.top = areaPosition.y + 'px';
 	textarea.style.left = areaPosition.x + 'px';
-	//textarea.style.width = tw + 'px';
+	textarea.style.width = 600+ 'px';
 
 	textarea.focus();
 
 	textarea.addEventListener('keydown', function (e) {
 		// hide on tab
-		if (e.keyCode === 9) {
+		if (e.keyCode === 13) {
 			//var regex=/[*|\":<>[\]{}`\\()';@&$]/;
     		//textarea.value=textarea.value.replace(regex ,"");
 			textNode.text(textarea.value);
-			textNode.fontSize(ts);
-			//textNode.width(tw);
-			textNode.align(ta);
-			textNode.fontFamily(tf);
-			textNode.fontStyle(tb);
-			textNode.lineHeight(tl);
-			textNode.fill(tc);
-			layer.batchDraw();
 			document.body.removeChild(textarea);
 		}
 	});
 })
 
-//textNode transformer
-textNode.on('click tap', function (e) {
-
-	stage.find('Transformer').destroy();
-	layer.draw();
-	
-	// create new transformer
-	var tr = new Konva.Transformer({
-		enabledAnchors: ['middle-left', 'middle-right'],
-	});
-	layer.add(tr);
-	tr.attachTo(e.target);
-	layer.draw();
-})
+// //textNode transformer
+ var MIN_WIDTH = 20;
+// textNode.on('click tap', function (e) {
+// 	var tr = new Konva.Transformer({
+// 		nodes: [textNode],
+// 		padding: 0,
+// 		// enable only side anchors
+// 		enabledAnchors: ['middle-left', 'middle-right'],
+// 		// limit transformer size
+// 		boundBoxFunc: (oldBox, newBox) => {
+// 			if (newBox.width < MIN_WIDTH) {
+// 			return oldBox;
+// 			}
+// 			return newBox;
+// 		},
+// 	});
+// 	layer.add(tr);
+// })
 
 textNode.on('transform', () => {
 	// with enabled anchors we can only change scaleX
 	// so we don't need to reset height
 	// just width
 	textNode.setAttrs({
-	  width: Math.max(textNode.width() * textNode.scaleX(), 20),
-	  scaleX: 1,
-	  scaleY: 1,
+		width: Math.max(textNode.width() * textNode.scaleX(), MIN_WIDTH),
+		scaleX: 1,
+		scaleY: 1,
 	});
 });
 
 // create text layer 2
-
 var textNode2 = new Konva.Text({
 	text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 	x: 20,
@@ -223,15 +181,7 @@ var textNode2 = new Konva.Text({
 layer.add(textNode2);
 
 textNode2.on('dblclick', () => {
-	//var tw = document.getElementById('txt2_width').value;
-	var ts = document.getElementById('txt2_size').value;
-	var ta = document.getElementById('txt2_align').value;
-	var tf = document.getElementById('txt2_fonts').value;
-	var tb = document.getElementById('txt2_bold').value;
-	var tl = document.getElementById('txt2_lineheight').value;
-	var tc = '#' + document.getElementById('txt2_color').value;
 	// create textarea over canvas with absolute position
-
 	// first we need to find its positon
 	var textPosition = textNode2.getAbsolutePosition();
 	var stageBox = stage.getContainer().getBoundingClientRect();
@@ -250,54 +200,100 @@ textNode2.on('dblclick', () => {
 	textarea2.style.position = 'absolute';
 	textarea2.style.top = areaPosition.y + 'px';
 	textarea2.style.left = areaPosition.x + 'px';
-	//textarea2.style.width = tw + 'px';
+	textarea2.style.width = 600 + 'px';
 
 	textarea2.focus();
 
 	textarea2.addEventListener('keydown', function (e) {
 		// hide on tab
-		if (e.keyCode === 9) {
-			//var regex=/[*|\":<>[\]{}`\\()';@&$]/;
-    	//textarea.value=textarea.value.replace(regex ,"");
+		if (e.keyCode === 13) {
 			textNode2.text(textarea2.value);
-			textNode2.fontSize(ts);
-			//textNode2.width(tw);
-			textNode2.align(ta);
-			textNode2.fontFamily(tf);
-			textNode2.fontStyle(tb);
-			textNode2.lineHeight(tl);
-			textNode2.fill(tc);
-			layer.batchDraw();
 			document.body.removeChild(textarea2);
 		}
 	});
 })
 
-//textNode transformer
-textNode2.on('click tap', function (e) {
-
-	stage.find('Transformer').destroy();
-	layer.draw();
-	
-	// create new transformer
-	var tr = new Konva.Transformer({
-		enabledAnchors: ['middle-left', 'middle-right'],
-	});
-	layer.add(tr);
-	tr.attachTo(e.target);
-	layer.draw();
-})
+// //textNode2 transformer
+// textNode2.on('click tap', function (e) {
+// 	var tr = new Konva.Transformer({
+// 		nodes: [textNode2],
+// 		padding: 0,
+// 		// enable only side anchors
+// 		enabledAnchors: ['middle-left', 'middle-right'],
+// 		// limit transformer size
+// 		boundBoxFunc: (oldBox, newBox) => {
+// 			if (newBox.width < MIN_WIDTH) {
+// 			return oldBox;
+// 			}
+// 			return newBox;
+// 		},
+// 	});
+// 	layer.add(tr);
+// })
 
 textNode2.on('transform', () => {
 	// with enabled anchors we can only change scaleX
 	// so we don't need to reset height
 	// just width
 	textNode2.setAttrs({
-	  width: Math.max(textNode2.width() * textNode2.scaleX(), 20),
+	  width: Math.max(textNode2.width() * textNode2.scaleX(), MIN_WIDTH),
 	  scaleX: 1,
 	  scaleY: 1,
 	});
 });
+
+function checkTextNode(){
+	var ts = document.getElementById('txt_size').value;
+	var ta = document.getElementById('txt_align').value;
+	var tf = document.getElementById('txt_fonts').value;
+	var tb = document.getElementById('txt_bold').value;
+	var tl = document.getElementById('txt_lineheight').value;
+	var tc = '#' + document.getElementById('txt_color').value;
+	textNode.fontSize(ts);
+	textNode.align(ta);
+	textNode.fontFamily(tf);
+	textNode.fontStyle(tb);
+	textNode.lineHeight(tl);
+	textNode.fill(tc);
+
+	var ts2 = document.getElementById('txt2_size').value;
+	var ta2 = document.getElementById('txt2_align').value;
+	var tf2 = document.getElementById('txt2_fonts').value;
+	var tb2 = document.getElementById('txt2_bold').value;
+	var tl2 = document.getElementById('txt2_lineheight').value;
+	var tc2 = '#' + document.getElementById('txt2_color').value;
+	textNode2.fontSize(ts2);
+	textNode2.align(ta2);
+	textNode2.fontFamily(tf2);
+	textNode2.fontStyle(tb2);
+	textNode2.lineHeight(tl2);
+	textNode2.fill(tc2);
+	layer.batchDraw();
+}
+
+var tr = new Konva.Transformer({
+	//centeredScaling: true,
+	//keepRatio: true,
+	  //enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+});
+layer.add(tr);
+layer.draw();
+
+//Stage check transform images
+stage.on('click tap', function (e) {
+	// if click on empty area - remove all transformers
+	if (e.target === stage) {
+		tr.nodes([]);
+		return;
+	}
+	if (e.target.hasName('img')) {
+		tr.enabledAnchors(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
+	}
+	if (e.target.hasName('txt')) {
+		tr.enabledAnchors(['middle-left', 'middle-right']);
+	}
+	tr.nodes([e.target]);
+})
 
 function dataURLtoBlob(dataurl) {
 	var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -311,7 +307,8 @@ function dataURLtoBlob(dataurl) {
 var downloadCanvas = function(ratio){
 	var link = document.createElement("a");
 	var quality = document.getElementById("ratioImage").value;
-	stage.find('Transformer').destroy();
+	//stage.find('Transformer').destroy();
+	tr.nodes([]);
 	var imgData = stage.toDataURL({ pixelRatio: quality });
 	var strDataURI = imgData.substr(22, imgData.length);
 	var blob = dataURLtoBlob(imgData);
@@ -328,7 +325,6 @@ var downloadCanvas = function(ratio){
 } 
 
 document.getElementById('save').addEventListener('click',downloadCanvas)
-	
 
 // Function upload to Layers
 var fileUpload = document.getElementById('fileUpload');
@@ -459,17 +455,7 @@ function execTemplate(width,height,image1_path,image1_x,image1_y,image1_scalex,i
 		};
 		imageObj3.src = image3_path;
 	}
-	// add text
-	//textNode.text(txt_content);
-	textNode.x(txt_x);
-	textNode.y(txt_y);
-	textNode.fontSize(txt_size);
-	textNode.fontFamily(txt_font);
-	textNode.width(txt_width);
-	textNode.align(txt_align);
-	textNode.lineHeight(txt_lineheight);
-	textNode.fill('#'+txt_fill);
-	layer.batchDraw();
+
 	// set value
 	//document.getElementById("txt_width").value = txt_width;
 	document.getElementById("txt_size").value = txt_size;
@@ -477,16 +463,9 @@ function execTemplate(width,height,image1_path,image1_x,image1_y,image1_scalex,i
 	document.getElementById("txt_color").style.background = '#' + txt_fill;
 	document.getElementById("txt_fonts").value = txt_font;
 	document.getElementById("txt_lineheight").value = txt_lineheight;
-	// add text 2
-	textNode2.x(txt2_x);
-	textNode2.y(txt2_y);
-	textNode2.fontSize(txt2_size);
-	textNode2.fontFamily(txt2_font);
-	textNode2.width(txt2_width);
-	textNode2.align(txt2_align);
-	textNode2.lineHeight(txt2_lineheight);
-	textNode2.fill('#'+txt2_fill);
-	layer.batchDraw();
+	document.getElementById("txt_align").value = txt_align;
+	//$('#txt_align').val(txt_align).attr("selected", "selected");
+
 	// set value
 	// document.getElementById("txt2_width").value = txt2_width;
 	document.getElementById("txt2_size").value = txt2_size;
@@ -494,6 +473,15 @@ function execTemplate(width,height,image1_path,image1_x,image1_y,image1_scalex,i
 	document.getElementById("txt2_color").style.background = '#' + txt2_fill;
 	document.getElementById("txt2_fonts").value = txt2_font;
 	document.getElementById("txt2_lineheight").value = txt2_lineheight;
+	document.getElementById("txt2_align").value = txt2_align;
+	//$('#txt2_align').val(txt2_align).attr("selected", "selected");
+
+	textNode.x(txt_x);
+	textNode.y(txt_y);
+	textNode.width(txt_width);
+	textNode2.x(txt2_x);
+	textNode2.y(txt2_y);
+	textNode2.width(txt2_width);
 }
 
 slider1.onchange = function() {
@@ -525,7 +513,7 @@ function offGallery(){
 }
 
 function hideCat(){
-	for(i = 1; i < 9; i++){
+	for(i = 1; i < 10; i++){
 		var a = eval('cat' + i + 'Style');
 		a.classList.add("w3-hide");
 	}
@@ -583,7 +571,7 @@ function openGifmaker(){
 }
 
 function addGifFrame(){
-	stage.find('Transformer').destroy();
+	//stage.find('Transformer').destroy();
 	document.getElementById('gifFramesHolder').innerHTML +='<img class="gif thumb" src="' + layer.toDataURL() + '" onclick="this.parentElement.removeChild(this);">'
 	alert("Đã thêm thiết kế hiện tại vào frame file gif");
 }
@@ -617,3 +605,4 @@ function createGif(){
 }
 
 var myCIL = setInterval(checkImageLayer, 1000);
+var myCIL2 = setInterval(checkTextNode, 1000);
