@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Animation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            font-family: 'Open Sans', sans-serif;
+        }
+        .ml4 {
+            font-weight: 700;
+            font-size: 4em;
+        }
+        .ml4 .letters {
+            position: absolute;
+            margin: auto;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+        .center{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1 class="ml4">
+            <span class="letters letters-1">Ready</span>
+            <span class="letters letters-2">Set</span>
+            <span class="letters letters-3">Go!</span>
+        </h1>
+    </div>
+    <script src="anime.min.js"></script>
+    <script>
+        var ml4 = {};
+        ml4.opacityIn = [0,1];
+        ml4.scaleIn = [0.2, 1];
+        ml4.scaleOut = 3;
+        ml4.durationIn = 800;
+        ml4.durationOut = 600;
+        ml4.delay = 500;
+
+        anime.timeline({loop: true})
+        .add({
+            targets: '.ml4 .letters-1',
+            opacity: ml4.opacityIn,
+            scale: ml4.scaleIn,
+            duration: ml4.durationIn
+        }).add({
+            targets: '.ml4 .letters-1',
+            opacity: 0,
+            scale: ml4.scaleOut,
+            duration: ml4.durationOut,
+            easing: "easeInExpo",
+            delay: ml4.delay
+        }).add({
+            targets: '.ml4 .letters-2',
+            opacity: ml4.opacityIn,
+            scale: ml4.scaleIn,
+            duration: ml4.durationIn
+        }).add({
+            targets: '.ml4 .letters-2',
+            opacity: 0,
+            scale: ml4.scaleOut,
+            duration: ml4.durationOut,
+            easing: "easeInExpo",
+            delay: ml4.delay
+        }).add({
+            targets: '.ml4 .letters-3',
+            opacity: ml4.opacityIn,
+            scale: ml4.scaleIn,
+            duration: ml4.durationIn
+        }).add({
+            targets: '.ml4 .letters-3',
+            opacity: 0,
+            scale: ml4.scaleOut,
+            duration: ml4.durationOut,
+            easing: "easeInExpo",
+            delay: ml4.delay
+        }).add({
+            targets: '.ml4',
+            opacity: 0,
+            duration: 500,
+            delay: 500
+        });
+    </script>
+</body>
+</html>
