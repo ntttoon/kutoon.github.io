@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Animation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: 'Barlow', sans-serif;
+        }
+        .ml3 {
+            font-weight: 700;
+            font-size: 4em;
+        }
+        .wrapper{
+            width: 300px;
+            height: 600px;
+            box-sizing:border-box;
+            position: absolute;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+        .pic1{
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .txt1{
+            position: absolute;
+            top:60px;
+            left: 10px;
+            width: 280px;
+            z-index: 11;
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: yellow;
+            text-shadow: 2px 2px 10px black;
+        }
+        .txt1 .word {
+            display: inline-block;
+        }
+        .txt2{
+            position: absolute;
+            top:40px;
+            left: 10px;
+            width: 280px;
+            z-index: 12;
+            text-align: center;
+            font-size: 60px;
+            font-weight: bold;
+            color: yellow;
+            text-shadow: 2px 2px 10px black;
+        }
+        .txt2 .word {
+            display: inline-block;
+        }
+        .txt3{
+            position: absolute;
+            top:60px;
+            left: 30px;
+            width: 240px;
+            z-index: 12;
+            text-align: center;
+            font-size: 60px;
+            font-weight: bold;
+            color: yellow;
+            text-shadow: 2px 2px 10px black;
+        }
+        .txt3 .letter {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="txt1">TUYỂN LẬP TRÌNH VIÊN ANDROID</div>
+        <div class="txt2">LƯƠNG LÊN ĐẾN 2000 USD</div>
+        <div class="txt3">NỘP HỒ SƠ NGAY</div>
+        <div class="pic1"><img src="bg.png" alt=""></div>
+    </div>
+    <script src="anime.min.js"></script>
+    <script>
+        function wrapChars(str) {
+            return str.replace(/\S/g, "<span class='letter'>$&</span>");
+        }
+        function wrapWords(str) {
+            return str.replace(/\S+/g, "<span class='word'>$&</span>");
+        }
+        function wrapLines(str) {
+            return str.replace(/.+$/gm, "<span class='line'>$&</span>");
+        }
+        var textWrapper1 = document.querySelector('.txt1');
+        textWrapper1.innerHTML = wrapWords(textWrapper1.textContent)
+        var textWrapper2 = document.querySelector('.txt2');
+        textWrapper2.innerHTML = wrapWords(textWrapper2.textContent)
+        var textWrapper3 = document.querySelector('.txt3');
+        textWrapper3.innerHTML = wrapChars(textWrapper3.textContent)
+
+        anime.timeline({loop: true})
+        .add({
+            targets: '.txt1 .word',
+            scale: [2,1],
+            opacity: [0,1],
+            easing: "easeOutExpo",
+            duration: 500,
+            delay: (el, i) => 100 * (i+1)
+        }).add({
+            targets: '.txt1',
+            opacity: 0,
+            duration: 1000,
+            easing: "easeOutExpo",
+            delay: 2000
+        }).add({
+            targets: '.txt2 .word',
+            scale: [0.5,1],
+            opacity: [0,1],
+            easing: "easeOutExpo",
+            duration: 500,
+            delay: (el, i) => 100 * (i+1)
+        }).add({
+            targets: '.txt2',
+            opacity: 0,
+            duration: 1000,
+            easing: "easeOutExpo",
+            delay: 2000
+        }).add({
+            targets: '.txt3 .letter',
+            translateY: [30,0],
+            opacity: [0,1],
+            duration: 500,
+            delay: (el, i) => 100 * (i+1)
+        }).add({
+            targets: '.txt3',
+            opacity: 0,
+            duration: 1000,
+            easing: "easeOutExpo",
+            delay: 2000
+        })
+    </script>
+</body>
+</html>

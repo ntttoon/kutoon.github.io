@@ -27,9 +27,17 @@
     <h1 class="ml2">Sunny mornings</h1>
     <script src="anime.min.js"></script>
     <script>
-        // Wrap every letter in a span
+        function wrapChars(str) {
+            return str.replace(/\S/g, "<span class='letter'>$&</span>");
+        }
+        function wrapWords(str) {
+            return str.replace(/\S+/g, "<span class='word'>$&</span>");
+        }
+        function wrapLines(str) {
+            return str.replace(/.+$/gm, "<span class='line'>$&</span>");
+        }
         var textWrapper = document.querySelector('.ml2');
-        textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+        textWrapper.innerHTML = wrapChars(textWrapper.textContent)
 
         anime.timeline({loop: true})
         .add({
